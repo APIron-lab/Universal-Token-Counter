@@ -4,7 +4,8 @@ import time
 from datetime import datetime, timezone
 from typing import Any, Dict
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
@@ -91,6 +92,24 @@ def _build_error_response(err: UtcError, started_at: float) -> JSONResponse:
         },
     }
     return JSONResponse(status_code=status, content=body)
+
+
+# ======== FastAPI validation error → UTC Error Spec へ統一 ========
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(
+    request: Request, exc: RequestValidationError
+) -> JSONResponse:
+    """FastAPI/Pydantic のバリデーションエラーも UTC 統一エラー形式に変換する。"""
+    started_at = time.perf_counter()
+
+    # ここでは「型不正」として一律に扱う（必要なら detail から分岐も可能）
+    err = UtcError(
+        UtcErrorCode.INVALID_TYPE,
+        "model/text フィールドの型が不正です。",
+    )
+    return _build_error_response(err, started_at)
 
 
 # ======== Routes ========
