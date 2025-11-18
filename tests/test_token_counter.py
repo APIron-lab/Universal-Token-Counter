@@ -1,5 +1,6 @@
 import pytest
 
+import core.token_counter as tc
 from core.token_counter import (
     MAX_BYTES,
     MAX_CHAR_COUNT,
@@ -77,4 +78,19 @@ def test_payload_too_large_by_bytes():
         count_tokens("gpt-4o", large_text)
 
     assert exc.value.code == UtcErrorCode.PAYLOAD_TOO_LARGE
+
+
+def test_language_detection_failure_falls_back_to_unknown(monkeypatch):
+    """langdetect.detect が例外を投げた場合に 'unknown' へフォールバックすることを確認。"""
+
+    def fake_detect(_text: str) -> str:
+        raise RuntimeError("langdetect failed")
+
+    # core.token_counter モジュール内の langdetect.detect を差し替える
+    monkeypatch.setattr(tc.langdetect, "detect", fake_detect)
+
+    data = tc.count_tokens("gpt-4o", "language fallback test")
+
+    meta = data["meta"]
+    assert meta["input_language"] == "unknown"
 
