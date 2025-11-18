@@ -1,85 +1,102 @@
-[![CI](https://github.com/APIron-lab/Universal-Token-Counter/actions/workflows/ci.yml/badge.svg)](https://github.com/APIron-lab/Universal-Token-Counter/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/APIron-lab/Universal-Token-Counter/graph/badge.svg?token=J5TxfxeKRu)](https://codecov.io/gh/APIron-lab/Universal-Token-Counter)
 # 🔢 Universal Token Counter (UTC)
 
-High-precision token counting API for multilingual text, powered by OpenAI-compatible encodings.
+High-precision multilingual token counting API with OpenAI-compatible encodings and a clean Core-first architecture.
 
-**🇯🇵 日本語での説明は本ページ下部の「Japanese Overview」セクションにあります。**
+[![CI](https://github.com/APIron-lab/Universal-Token-Counter/actions/workflows/ci.yml/badge.svg)](https://github.com/APIron-lab/Universal-Token-Counter/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/APIron-lab/Universal-Token-Counter/graph/badge.svg?token=J5TxfxeKRu)](https://codecov.io/gh/APIron-lab/Universal-Token-Counter)
 
 ---
 
 ## 🚀 Features
-- Accurate token counting using OpenAI-compatible encodings (`tiktoken`)
-- Language detection (`langdetect`)
-- Unified result + meta response format (UTC Spec v0.1)
-- Detailed domain errors (INVALID_TYPE, EMPTY_TEXT, etc.)
-- Fully tested with pytest
-- Lightweight core-first architecture for easy integration into any API system
+- Accurate token counting (OpenAI / tiktoken encoding)
+- FastAPI HTTP API endpoint (`/utc/v0/token-count`)
+- Python Core API usage (`core.token_counter`)
+- Unified `result + meta` response (UTC Spec v0.1)
+- Structured error responses (APIron Error Spec)
+- Language detection
+- 100% test coverage (pytest + Codecov)
+- Core-first architecture for easy extension
 
 ---
 
-## 🧱 Architecture (APIron Core-first)
+## 🧱 Project Architecture (APIron Core-first Standard)
 
 ```
 universal-token-counter/
-├── core/                 # UTC core logic
+├── core/                     # Core token counting logic
 │   ├── token_counter.py
 │   └── __init__.py
-├── backend/              # Web API layer (Django/FastAPI)
-├── lambda_http/          # AWS Lambda handler
-├── tests/                # pytest
-├── .github/workflows/    # CI
+├── backend/
+│   └── fastapi_app/          # HTTP API (FastAPI)
+│        ├── main.py
+│        ├── router.py
+│        ├── handlers.py
+│        └── schemas.py
+├── tests/                    # pytest unit tests
+├── .github/workflows/        # CI (pytest + codecov)
 ├── requirements.txt
 └── README.md
 ```
 
 ---
 
-## 📦 Installation
+# ⚡ HTTP API (FastAPI)
 
-### Clone the repository
-```bash
-git clone https://github.com/APIron-lab/Universal-Token-Counter.git
-cd Universal-Token-Counter
+## Start API locally
+
+```
+python -m backend.fastapi_app.main
 ```
 
-### Create virtual environment
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
+Server starts at:
+
+```
+http://127.0.0.1:8000
 ```
 
-### Install dependencies
+## Endpoint
+
+```
+POST /utc/v0/token-count
+```
+
+### Request Example (curl)
+
 ```bash
-pip install --upgrade pip
-pip install -r requirements.txt
+curl -X POST "http://127.0.0.1:8000/utc/v0/token-count"   -H "Content-Type: application/json"   -d '{"model":"gpt-4o","text":"これはテストです"}'
+```
+
+### Response Example
+
+```json
+{
+  "result": {
+    "model": "gpt-4o",
+    "encoding": "o200k_base",
+    "char_count": 8,
+    "token_count": 4,
+    "token_per_char": 0.5
+  },
+  "meta": {
+    "input_language": "ja",
+    "input_size_bytes": 24,
+    "token_density": 0.1666,
+    "model_family": "openai",
+    "processing_time_ms": 450.12,
+    "utc_timestamp": "2025-11-18T00:00:00Z",
+    "version": "0.1.0"
+  }
+}
 ```
 
 ---
 
-## 🧪 Testing
-
-```bash
-pytest
-```
-
-All tests should pass:
-
-```
-5 passed in X.XXs
-```
-
----
-
-## 🧩 Example Usage (Python)
+# 🧩 Example Usage (Python Core API)
 
 ```python
 from core.token_counter import count_tokens
 
-model = "gpt-4o"
-text = "Hello, world!"
-
-data = count_tokens(model, text)
+data = count_tokens("gpt-4o", "Hello world!")
 
 print(data["result"])
 print(data["meta"])
@@ -87,20 +104,52 @@ print(data["meta"])
 
 ---
 
-## 📘 Supported Models
+# 🌐 Example Usage (Node.js / fetch)
 
-| Model            | Encoding       |
-|------------------|----------------|
-| gpt-4o           | o200k_base     |
-| gpt-4.1          | o200k_base     |
-| gpt-4.1-mini     | o200k_base     |
-| gpt-4-turbo      | o200k_base     |
-| gpt-4            | cl100k_base    |
-| gpt-3.5-turbo    | cl100k_base    |
+```js
+const res = await fetch("http://127.0.0.1:8000/utc/v0/token-count", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    model: "gpt-4o",
+    text: "Hello world!"
+  })
+});
+
+console.log(await res.json());
+```
 
 ---
 
-## 🧮 Success Response (UTC Spec v0.1)
+# 🌐 Example Usage (Node.js / axios)
+
+```js
+import axios from "axios";
+
+const res = await axios.post(
+  "http://127.0.0.1:8000/utc/v0/token-count",
+  { model: "gpt-4o", text: "Hello world!" }
+);
+
+console.log(res.data);
+```
+
+---
+
+# 📘 Supported Models
+
+| Model          | Encoding     |
+|----------------|--------------|
+| gpt-4o         | o200k_base   |
+| gpt-4.1        | o200k_base   |
+| gpt-4.1-mini   | o200k_base   |
+| gpt-4-turbo    | o200k_base   |
+| gpt-4          | cl100k_base  |
+| gpt-3.5-turbo  | cl100k_base  |
+
+---
+
+# 🧮 Success Response (UTC Spec v0.1)
 
 ```json
 {
@@ -117,7 +166,7 @@ print(data["meta"])
     "token_density": 0.25,
     "model_family": "openai",
     "processing_time_ms": 1.42,
-    "utc_timestamp": "2025-01-01T00:00:00+00:00",
+    "utc_timestamp": "2025-01-01T00:00:00Z",
     "version": "0.1.0"
   }
 }
@@ -125,82 +174,98 @@ print(data["meta"])
 
 ---
 
-## ❌ Error Response (Unified APIron Error Spec)
+# ❌ Error Response (APIron Error Spec)
 
 ```json
 {
   "error": {
     "code": "EMPTY_TEXT",
     "message": "入力テキストが空です。",
-    "hint": "Text must not be empty."
+    "hint": "Provide non-empty text (not only whitespace)."
   },
   "meta": {
     "version": "0.1.0",
-    "utc_timestamp": "2025-01-01T00:00:00+00:00",
-    "processing_time_ms": 0.52
+    "utc_timestamp": "2025-01-01T00:00:00Z"
   }
 }
 ```
 
 ### Error Codes
 
-| Code                | Description                      |
-|---------------------|----------------------------------|
-| INVALID_JSON        | Invalid JSON format              |
-| MISSING_FIELD       | Required fields missing          |
-| INVALID_TYPE        | Wrong input type                 |
-| EMPTY_TEXT          | Text is empty or whitespace only |
-| UNSUPPORTED_MODEL   | Unsupported model name           |
-| PAYLOAD_TOO_LARGE   | Input exceeds size constraints   |
-| INTERNAL_ERROR      | Unexpected internal exception    |
+| Code              | Meaning                     | HTTP |
+|-------------------|-----------------------------|------|
+| INVALID_TYPE      | Wrong input type            | 400  |
+| EMPTY_TEXT        | Text is empty or spaces     | 422  |
+| UNSUPPORTED_MODEL | Model not supported         | 400  |
+| PAYLOAD_TOO_LARGE | Input too large             | 413  |
 
 ---
 
-## ☁ Roadmap (Universal Token Series)
-- UTC Efficiency Mode (高速計測)
-- Batch Counter
+# ☁ Roadmap (Universal Token Series)
+
+- UTC v1 (Pro / Paid Edition)
+- UTC Efficiency Mode
+- Universal Token Batch (UTB)
 - Model Comparison Tool
-- RapidAPI distribution (Free → Pro)
+- Universal Token Series (brand integration)
+- RapidAPI Release (Free → Paid Upgrade)
 
 ---
 
-## 📝 License
-MIT License
+# 🌐 RapidAPI (coming soon)
 
----
+Production API URL will be added here:
 
-# 🇯🇵 Japanese Overview（日本語による説明）
-
-## 概要
-Universal Token Counter (UTC) は、任意のテキストを OpenAI 互換エンコーディングで  
-**高精度にトークン数を算出するツール**です。
-
-結果は **`result` + `meta` の2階層構造**で返されます。
-
-## 特徴
-- OpenAI モデルに対応したトークン数の計測
-- 日本語・英語など多言語テキストの判定
-- 文字数・トークン密度・バイト数を統計として返却
-- APIron の統一エラーレスポンス仕様に準拠
-
-## 使い方（Python）
-
-```python
-from core.token_counter import count_tokens
-data = count_tokens("gpt-4o", "これはテストです。")
+```
+https://api.universal-token-counter.apiron.dev/v0/token-count
 ```
 
-## 正常レスポンス（概要）
-- `result`: モデル・文字数・トークン数  
-- `meta`: 言語判定・処理時間・バイト数・UTCタイムスタンプ
+---
 
-## エラー仕様
-APIron Error Spec に準拠：
+# 🇯🇵 Japanese Overview（日本語版）
 
-- INVALID_TYPE（型不正）
-- EMPTY_TEXT（テキストが空）
-- UNSUPPORTED_MODEL（未対応モデル）
-- PAYLOAD_TOO_LARGE（上限超過）
+## 概要
+Universal Token Counter (UTC) は、テキストを OpenAI 互換エンコーディングで  
+**高精度にトークン数を算出する軽量 API** です。
+
+- Core ロジックは純粋関数として実装  
+- FastAPI により HTTP API として利用可能  
+- 結果は `result + meta` の 2 階層で返却  
+- APIron Error Spec に準拠したエラー仕様
+
+---
+
+## FastAPI エンドポイント
+
+```
+POST /utc/v0/token-count
+```
+
+curl 例：
+
+```bash
+curl -X POST http://127.0.0.1:8000/utc/v0/token-count   -H "Content-Type: application/json"   -d '{"model":"gpt-4o","text":"これはテストです"}'
+```
+
+---
+
+## エラー仕様（日本語）
+
+| エラーコード         | 内容                     |
+|----------------------|---------------------------|
+| INVALID_TYPE         | 型が不正です             |
+| EMPTY_TEXT           | 空文字または空白のみ     |
+| UNSUPPORTED_MODEL    | 未対応のモデルです       |
+| PAYLOAD_TOO_LARGE    | 入力サイズが大きすぎます |
+
+---
+
+## 今後の拡張
+
+- 高速化バージョン（Pro版）
+- バッチ処理 API
+- モデル比較ツール
+- 「Universal Token Series」としてシリーズ化
 
 ---
 
