@@ -17,6 +17,9 @@ High-precision multilingual token counting API with OpenAI-compatible encodings 
 - 100% test coverage (pytest + Codecov)
 - Core-first architecture for easy extension
 
+➡ This repository is the open core of the upcoming APIron "Universal Token Series".  
+  The commercial API version (RapidAPI) will provide additional features.
+
 ---
 
 ## 🧱 Project Architecture (APIron Core-first Standard)
@@ -232,6 +235,9 @@ Universal Token Counter (UTC) は、テキストを OpenAI 互換エンコーデ
 - FastAPI により HTTP API として利用可能  
 - 結果は `result + meta` の 2 階層で返却  
 - APIron Error Spec に準拠したエラー仕様
+
+➡ このリポジトリは APIron「Universal Token シリーズ」のオープンソース版です。  
+  商用API版（RapidAPI）では、追加機能を提供する予定です。
 
 ---
 
