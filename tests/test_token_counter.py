@@ -94,3 +94,14 @@ def test_language_detection_failure_falls_back_to_unknown(monkeypatch):
     meta = data["meta"]
     assert meta["input_language"] == "unknown"
 
+def test_invalid_type_raises_error():
+    """model や text が str でない場合、INVALID_TYPE を返す。"""
+    with pytest.raises(UtcError) as exc:
+        count_tokens(123, "valid text")  # model が int → INVALID_TYPE
+
+    assert exc.value.code == UtcErrorCode.INVALID_TYPE
+
+    with pytest.raises(UtcError) as exc2:
+        count_tokens("gpt-4o", None)  # text が None → INVALID_TYPE
+
+    assert exc2.value.code == UtcErrorCode.INVALID_TYPE
