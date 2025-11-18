@@ -27,10 +27,10 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pytest --cov=core --cov-report=xml
+          pytest --cov=core --cov=backend --cov-report=xml
 
       - name: Upload coverage report to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage.xml
