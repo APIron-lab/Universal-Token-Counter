@@ -2,6 +2,7 @@
 # Universal Token Counter (UTC)
 
 High-precision multilingual token counting API with OpenAI-compatible encodings and a clean Core-first architecture.
+
 [![CI](https://github.com/APIron-lab/Universal-Token-Counter/actions/workflows/ci.yml/badge.svg)](https://github.com/APIron-lab/Universal-Token-Counter/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/APIron-lab/Universal-Token-Counter/graph/badge.svg?token=J5TxfxeKRu)](https://codecov.io/gh/APIron-lab/Universal-Token-Counter)
 
