@@ -1,9 +1,13 @@
-# 🔢 Universal Token Counter (UTC)
+
+# Universal Token Counter (UTC)
 
 High-precision multilingual token counting API with OpenAI-compatible encodings and a clean Core-first architecture.
-
 [![CI](https://github.com/APIron-lab/Universal-Token-Counter/actions/workflows/ci.yml/badge.svg)](https://github.com/APIron-lab/Universal-Token-Counter/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/APIron-lab/Universal-Token-Counter/graph/badge.svg?token=J5TxfxeKRu)](https://codecov.io/gh/APIron-lab/Universal-Token-Counter)
+
+## 🇯🇵 Japanese Overview（日本語版は後半に掲載）
+
+本 README の後半に日本語版の包括的な解説があります。
 
 ---
 
@@ -14,11 +18,12 @@ High-precision multilingual token counting API with OpenAI-compatible encodings 
 - Unified `result + meta` response (UTC Spec v0.1)
 - Structured error responses (APIron Error Spec)
 - Language detection
-- 100% test coverage (pytest + Codecov)
+- High test coverage (pytest + Codecov)
 - Core-first architecture for easy extension
+- Production-ready packaging for AWS Lambda
 
-➡ This repository is the open core of the upcoming APIron "Universal Token Series".  
-  The commercial API version (RapidAPI) will provide additional features.
+This repository is the open-core implementation of APIron “Universal Token Series”.
+Commercial versions (RapidAPI) will include extended features.
 
 ---
 
@@ -36,7 +41,7 @@ universal-token-counter/
 │        ├── handlers.py
 │        └── schemas.py
 ├── tests/                    # pytest unit tests
-├── .github/workflows/        # CI (pytest + codecov)
+├── .github/workflows/        # CI
 ├── requirements.txt
 └── README.md
 ```
@@ -69,72 +74,29 @@ POST /utc/v0/token-count
 curl -X POST "http://127.0.0.1:8000/utc/v0/token-count"   -H "Content-Type: application/json"   -d '{"model":"gpt-4o","text":"これはテストです"}'
 ```
 
-### Response Example
-
-```json
-{
-  "result": {
-    "model": "gpt-4o",
-    "encoding": "o200k_base",
-    "char_count": 8,
-    "token_count": 4,
-    "token_per_char": 0.5
-  },
-  "meta": {
-    "input_language": "ja",
-    "input_size_bytes": 24,
-    "token_density": 0.1666,
-    "model_family": "openai",
-    "processing_time_ms": 450.12,
-    "utc_timestamp": "2025-11-18T00:00:00Z",
-    "version": "0.1.0"
-  }
-}
-```
-
 ---
 
-# 🧩 Example Usage (Python Core API)
+# 🧩 Python Core Usage
 
 ```python
 from core.token_counter import count_tokens
 
 data = count_tokens("gpt-4o", "Hello world!")
-
 print(data["result"])
 print(data["meta"])
 ```
 
 ---
 
-# 🌐 Example Usage (Node.js / fetch)
+# 🌐 Node.js Example (fetch)
 
 ```js
 const res = await fetch("http://127.0.0.1:8000/utc/v0/token-count", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    model: "gpt-4o",
-    text: "Hello world!"
-  })
+  body: JSON.stringify({ model: "gpt-4o", text: "Hello world!" })
 });
-
 console.log(await res.json());
-```
-
----
-
-# 🌐 Example Usage (Node.js / axios)
-
-```js
-import axios from "axios";
-
-const res = await axios.post(
-  "http://127.0.0.1:8000/utc/v0/token-count",
-  { model: "gpt-4o", text: "Hello world!" }
-);
-
-console.log(res.data);
 ```
 
 ---
@@ -206,38 +168,29 @@ console.log(res.data);
 
 # ☁ Roadmap (Universal Token Series)
 
-- UTC v1 (Pro / Paid Edition)
+- UTC v1 (Pro Edition)
 - UTC Efficiency Mode
 - Universal Token Batch (UTB)
 - Model Comparison Tool
-- Universal Token Series (brand integration)
-- RapidAPI Release (Free → Paid Upgrade)
+- Universal Token Series productization
+- RapidAPI release (Free → Pro upgrade)
 
 ---
 
-# 🌐 RapidAPI (coming soon)
-
-Production API URL will be added here:
-
-```
-https://api.universal-token-counter.apiron.dev/v0/token-count
-```
-
----
-
-# 🇯🇵 Japanese Overview（日本語版）
+# 🇯🇵 日本語版 README
 
 ## 概要
-Universal Token Counter (UTC) は、テキストを OpenAI 互換エンコーディングで  
-**高精度にトークン数を算出する軽量 API** です。
+Universal Token Counter (UTC) は、OpenAI 互換エンコーディングで  
+テキストのトークン数を高精度に算出する **軽量・高精度 API** です。
 
-- Core ロジックは純粋関数として実装  
-- FastAPI により HTTP API として利用可能  
-- 結果は `result + meta` の 2 階層で返却  
-- APIron Error Spec に準拠したエラー仕様
+- Core ロジックは純粋関数として実装
+- FastAPI により HTTP API として利用可能
+- 結果は `result + meta` の 2 階層で返却
+- APIron Error Spec に準拠
+- AWS Lambda 上での運用に最適化可能
 
-➡ このリポジトリは APIron「Universal Token シリーズ」のオープンソース版です。  
-  商用API版（RapidAPI）では、追加機能を提供する予定です。
+このリポジトリはオープンソース版であり、  
+商用 RapidAPI 版では追加機能が提供される予定です。
 
 ---
 
@@ -271,11 +224,12 @@ curl -X POST http://127.0.0.1:8000/utc/v0/token-count   -H "Content-Type: applic
 - 高速化バージョン（Pro版）
 - バッチ処理 API
 - モデル比較ツール
-- 「Universal Token Series」としてシリーズ化
+- 「Universal Token Series」シリーズ化
 
 ---
 
-## Maintainer
+Maintainer  
 APIron-lab  
 https://github.com/APIron-lab
+
 
