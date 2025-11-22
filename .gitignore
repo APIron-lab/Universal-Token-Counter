@@ -21,3 +21,9 @@ db.sqlite3
 .DS_Store
 Thumbs.db
 
+
+# Lambda build artifacts
+lambda_http/build/
+lambda_http/deployment.zip
+deployment.zip
+
