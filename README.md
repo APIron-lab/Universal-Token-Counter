@@ -6,6 +6,14 @@ High-precision multilingual token counting API with OpenAI-compatible encodings 
 [![CI](https://github.com/APIron-lab/Universal-Token-Counter/actions/workflows/ci.yml/badge.svg)](https://github.com/APIron-lab/Universal-Token-Counter/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/APIron-lab/Universal-Token-Counter/graph/badge.svg?token=J5TxfxeKRu)](https://codecov.io/gh/APIron-lab/Universal-Token-Counter)
 
+## 🌐 Official Hosted API (Free Plan Available)
+
+Universal Token Counter (UTC) is also available as a hosted API on RapidAPI.
+
+Use the hosted version here:  
+https://rapidapi.com/APIronlab/api/universal-token-counter-utc
+
+
 ## 🇯🇵 Japanese Overview（日本語版は後半に掲載）
 
 本 README の後半に日本語版の包括的な解説があります。
@@ -192,6 +200,13 @@ Universal Token Counter (UTC) は、OpenAI 互換エンコーディングで
 
 このリポジトリはオープンソース版であり、  
 商用 RapidAPI 版では追加機能が提供される予定です。
+
+## 🌐 公開API（無料プランあり）
+
+Universal Token Counter (UTC) は RapidAPI からも利用できます。
+
+ホスト版はこちら：  
+https://rapidapi.com/APIronlab/api/universal-token-counter-utc
 
 ---
 
